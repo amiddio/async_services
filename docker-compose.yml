@@ -5,8 +5,10 @@ services:
   web-app:
     build:
       context: .
+    env_file:
+      - .env
     ports:
-      - "8008:8008"
+      - ${PORT}:${PORT}
     volumes:
       - ./src:/app
     command: >
