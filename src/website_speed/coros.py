@@ -3,7 +3,7 @@ import time
 
 from aiohttp import ClientSession
 
-from src.utils.utils import timed_it
+from utils.utils import timed_it
 
 
 async def get_website_detail(session: ClientSession, url: str) -> dict:
