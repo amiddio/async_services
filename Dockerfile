@@ -1,6 +1,6 @@
 FROM python:3.10
 
-EXPOSE 8000
+EXPOSE 8008
 
 COPY src /app
 WORKDIR /app
