@@ -3,6 +3,8 @@ import time
 
 from aiohttp import ClientSession
 
+from src.utils.utils import timed_it
+
 
 async def get_website_detail(session: ClientSession, url: str) -> dict:
     start = time.time()
@@ -14,6 +16,7 @@ async def get_website_detail(session: ClientSession, url: str) -> dict:
         }
 
 
+@timed_it
 async def make_website_requests(url: str, times: int):
     async with ClientSession() as session:
         requests = [get_website_detail(session, url) for _ in range(times)]

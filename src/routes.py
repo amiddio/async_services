@@ -2,7 +2,7 @@ from aiohttp import web
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 
-from utils.utils import clean_url
+from utils.utils import clean_url, timed_it
 from website_speed.coros import make_website_requests
 
 routes = web.RouteTableDef()
