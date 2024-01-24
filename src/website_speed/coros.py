@@ -16,7 +16,7 @@ async def get_website_detail(session: ClientSession, url: str) -> dict:
         }
 
 
-@timed_it
+@timed_it('script_loading_sec')
 async def make_website_requests(url: str, times: int):
     async with ClientSession() as session:
         requests = [get_website_detail(session, url) for _ in range(times)]
