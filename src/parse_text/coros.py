@@ -1,11 +1,11 @@
 import asyncio
 import functools
 from concurrent.futures import ProcessPoolExecutor
-
+from operator import itemgetter
 import aiohttp.web
 from aiohttp import ClientSession
 
-from utils.utils import get_data_chunk, map_cleaner, timed_it
+from utils.utils import get_data_chunk, map_cleaner, timed_it, map_words_frequencies, merge_words_frequencies
 
 PARTITION_SIZE = 50_000
 
@@ -65,7 +65,35 @@ async def clean_text(data: dict) -> dict:
     return data
 
 
+@timed_it('words_frequencies_sec')
+async def get_words_frequencies(data: dict) -> dict:
+    loop = asyncio.get_event_loop()
+    tasks = []
+
+    with ProcessPoolExecutor() as pool:
+        for num, chunk in enumerate(get_data_chunk(data['data'], PARTITION_SIZE), start=1):
+            task = loop.run_in_executor(pool, functools.partial(map_words_frequencies, chunk, num))
+            tasks.append(task)
+
+        intermediate_results = await asyncio.gather(*tasks)
+        final_result = functools.reduce(merge_words_frequencies, intermediate_results)
+
+    data['data'] = final_result
+
+    return data
+
+
+@timed_it('dictionary_sort_sec')
+async def sort_dictionary(data: dict) -> dict:
+    print(f"Start sorting words frequencies")
+    data['data'] = sorted(data['data'].items(), key=itemgetter(1), reverse=True)
+    print(f"End sorting words frequencies")
+    return data
+
+
 async def parser(urls: list):
     data = await get_content(urls=urls)
     data = await clean_text(data=data)
-
+    data = await get_words_frequencies(data=data)
+    data = await sort_dictionary(data=data)
+    print(data)

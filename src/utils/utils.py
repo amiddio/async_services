@@ -1,6 +1,7 @@
 import time
 import re
 
+from collections import Counter
 from typing import Callable, Any
 from urllib.parse import urlparse
 
@@ -52,3 +53,22 @@ def map_cleaner(text: str, chunk_num: int) -> str:
     text = set_lowercase(text)
     print(f"End cleaning text chunk {chunk_num} ({length})")
     return text
+
+
+def map_words_frequencies(text: str, chunk_num: int) -> dict:
+    print(f"Start creating words frequencies from chunk {chunk_num}")
+    words_freq_dct = Counter(text.split())
+    print(f"End creating words frequencies from chunk {chunk_num}. Done for {len(words_freq_dct)} words.")
+    return words_freq_dct
+
+
+def merge_words_frequencies(dict_a: dict, dict_b: dict) -> dict:
+    len_dict_b = len(dict_b)
+    print(f"Start merging dictionaries {len(dict_a)} and {len_dict_b}")
+    for word in dict_b:
+        if word in dict_a:
+            dict_a[word] += dict_b[word]
+        else:
+            dict_a[word] = dict_b[word]
+    print(f"End merging dictionaries {len(dict_a)} and {len_dict_b}")
+    return dict_a
