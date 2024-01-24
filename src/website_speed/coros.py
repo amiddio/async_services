@@ -28,14 +28,16 @@ async def make_website_requests(url: str, times: int):
         total_successful, total_failed = len(successful), len(failed)
 
         answer = {
-            'website': url,
-            'total_requests': total_successful + total_failed,
-            'successful_requests': total_successful,
-            'failed_requests': total_failed,
+            'meta': {
+                'website': url,
+                'total_requests': total_successful + total_failed,
+                'successful_requests': total_successful,
+                'failed_requests': total_failed,
+            }
         }
 
         if total_successful:
             avg_time_loading = sum([item.get('time') for item in successful]) / total_successful
-            answer['average_website_loading_sec'] = f'{avg_time_loading:.4f}'
+            answer['meta']['average_website_loading_sec'] = f'{avg_time_loading:.4f}'
 
         return answer

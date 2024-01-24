@@ -1,4 +1,4 @@
-from aiohttp import web, ClientSession
+from aiohttp import web
 from aiohttp.web_request import Request
 from aiohttp.web_response import Response
 
@@ -21,12 +21,25 @@ async def website_speed(request: Request) -> Response:
     return web.json_response(result)
 
 
-@routes.get('/parse_text')
+@routes.post('/parse_text')
 async def parse_text(request: Request) -> Response:
-    urls: list = request.query.get('url').strip().split(',')
+    post_data = await request.post()
+
+    urls: str = post_data.get('urls', '').strip()
+    limit: int = int(post_data.get('limit', 0))
+    exclude_words_le: int = int(post_data.get('exclude_words_le', 0))
+    include_words: str = post_data.get('include_words_only', '').strip()
+
+    if not urls:
+        return web.HTTPBadRequest()
+    else:
+        urls: list = urls.split(',')
+
+    if include_words:
+        include_words: list = include_words.split(',')
+
     if not all([is_valid_url(url) for url in urls]):
         return web.HTTPBadRequest()
 
-    await parser(urls=urls)
-
-    return web.json_response({})
+    result = await parser(urls=urls, limit=limit, exclude_words_le=exclude_words_le, include_words=include_words)
+    return web.json_response(result)
