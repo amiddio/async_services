@@ -55,6 +55,6 @@ async def make_website_requests(url: str, times: int) -> dict:
 
         if total_successful:
             avg_time_loading = sum([item.get('time') for item in successful]) / total_successful
-            answer['meta']['average_website_loading_sec'] = f'{avg_time_loading:.4f}'
+            answer['meta']['average_website_loading'] = f'{avg_time_loading:.4f}'
 
         return answer
