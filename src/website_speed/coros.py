@@ -7,6 +7,14 @@ from utils.utils import timed_it
 
 
 async def get_website_detail(session: ClientSession, url: str) -> dict:
+    """
+    Корутина делает запрос к сайту возвращается словарь с кодом статуса и временем загрузки
+
+    :param session: ClientSession
+    :param url: str
+    :return: dict
+    """
+
     start = time.time()
     async with session.get(url) as response:
         end = time.time()
@@ -16,8 +24,17 @@ async def get_website_detail(session: ClientSession, url: str) -> dict:
         }
 
 
-@timed_it('script_loading_sec')
-async def make_website_requests(url: str, times: int):
+@timed_it('script_loading')
+async def make_website_requests(url: str, times: int) -> dict:
+    """
+    Главная сопрограмма сервиса.
+    Осуществляет times запросов к сайту и считает среднее время запросов.
+
+    :param url: str
+    :param times: int
+    :return: dict
+    """
+
     async with ClientSession() as session:
         requests = [get_website_detail(session, url) for _ in range(times)]
         results = await asyncio.gather(*requests, return_exceptions=True)
