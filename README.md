@@ -36,6 +36,12 @@
 
 * С корня `d:/async_services` выполните команду `docker-compose down`
 
+### Unittests
+
+* С корня `d:/async_services` перейти в `cd /src/tests`
+* Запуск тестов для первого сервиса: `python website_speed_test.py`
+* Запуск тестов для второго сервиса: `python parse_text_test.py`
+
 ## Сервис: среднее время загрузки сайта
 
 Сервис асинхронно посылает N запросов к сайту и считает среднее время загрузки.
